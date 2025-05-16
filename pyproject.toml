@@ -1,6 +1,6 @@
 [project]
 name = "repeatradar"
-version = "0.1.2"
+version = "0.1.3"
 description = "A package for creating cohort retention calculation and visualizations"
 authors = [
     {name = "Kristof Menyhert",email = "menyhert.kristof@gmail.com"}
