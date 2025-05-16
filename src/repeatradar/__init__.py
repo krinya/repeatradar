@@ -6,4 +6,4 @@ __version__ = "0.1.1"
 # in a separate file like 'my_simple_package/aux.py' and import it here:
 from .aux import greet, create_sample_data, filter_for_name
 
-__all__ = ['greet', create_sample_data, filter_for_name] # Explicitly define the public API
+__all__ = ['greet', 'create_sample_data', 'filter_for_name'] # Explicitly define the public API
