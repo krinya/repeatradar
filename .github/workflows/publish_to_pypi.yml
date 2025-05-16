@@ -36,10 +36,7 @@ jobs:
           installer-parallel: true
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root --with dev
-
-      - name: Install project package with dev dependencies
-        run: poetry install --no-interaction --with dev
+        run: poetry install --no-interaction --no-root
 
       - name: Run tests with pytest
         run: poetry run pytest tests/
