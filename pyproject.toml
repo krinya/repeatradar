@@ -1,6 +1,8 @@
 [project]
 name = "repeatradar"
+
 version = "0.3.0"
+
 description = "A package for creating cohort retention calculation and visualizations"
 authors = [
     {name = "Kristof Menyhert",email = "menyhert.kristof@gmail.com"}
@@ -15,12 +17,12 @@ keywords = ["cohort", "retention", "calculation", "visualization"]
 requires-python = ">=3.10"
 
 dependencies = [
-    "pandas (>=2.2.3,<3.0.0)",
-    "pytest (>=8.3.5,<9.0.0)"
+    "pandas (>=2.2.3,<3.0.0)"
 ]
 
 [tool.poetry]
 packages = [{include = "repeatradar", from = "src"}]
+group.dev.dependencies = {pytest = ">=8.3.5,<9.0.0"}
 
 [tool.pytest]
 pythonpath = ["src"]
