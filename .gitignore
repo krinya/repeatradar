@@ -1,0 +1,53 @@
+.venv
+.venv/*
+.pytest_cache
+.pytest_cache/*
+tests/__pycache__
+tests/__pycache__/*
+src/repeatradar/__pycache__
+src/repeatradar/__pycache__/*
+
+# Python Bytecode and Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / Build Artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+*.so
+
+# Test Artifacts
+.coverage
+.pytest_cache/
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# Virtual Environment (if created in project)
+.venv/
+venv/
+ENV/
+
+# Poetry (cache directory, not needed in repo)
+.poetry/
+
+# Sphinx documentation build output
+docs/_build/
+
+# VS Code specific
+.vscode/
+
+# macOS specific
+.DS_Store
+
+# Secrets / Environment variables
+.env
+*.env
+secrets.yaml
+
+# Other OS files
+Thumbs.db
+ehthumbs.db

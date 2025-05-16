@@ -1,0 +1,28 @@
+[project]
+name = "repeatradar"
+version = "0.1.0"
+description = "A package for creating cohort retention calculation and visualizations"
+authors = [
+    {name = "Kristof Menyhert",email = "menyhert.kristof@gmail.com"}
+]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/krinya/repeatradar"
+repistory = "https://github.com/krinya/repeatradar"
+
+keywords = ["cohort", "retention", "calculation", "visualization"]
+
+requires-python = ">=3.10"
+
+dependencies = [
+    "pandas (>=2.2.3,<3.0.0)",
+    "pytest (>=8.3.5,<9.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "repeatradar", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
