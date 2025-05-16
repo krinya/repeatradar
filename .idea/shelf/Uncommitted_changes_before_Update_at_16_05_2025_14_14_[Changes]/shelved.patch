@@ -1,0 +1,24 @@
+Index: pyproject.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[project]\r\nname = \"repeatradar\"\r\nversion = \"0.1.1\"\r\ndescription = \"A package for creating cohort retention calculation and visualizations\"\r\nauthors = [\r\n    {name = \"Kristof Menyhert\",email = \"menyhert.kristof@gmail.com\"}\r\n]\r\nreadme = \"README.md\"\r\nlicense = \"MIT\"\r\nhomepage = \"https://github.com/krinya/repeatradar\"\r\nrepistory = \"https://github.com/krinya/repeatradar\"\r\n\r\nkeywords = [\"cohort\", \"retention\", \"calculation\", \"visualization\"]\r\n\r\nrequires-python = \">=3.10\"\r\n\r\ndependencies = [\r\n    \"pandas (>=2.2.3,<3.0.0)\",\r\n    \"pytest (>=8.3.5,<9.0.0)\"\r\n]\r\n\r\n[tool.poetry]\r\npackages = [{include = \"repeatradar\", from = \"src\"}]\r\n\r\n[tool.pytest]\r\npythonpath = [\"src\"]\r\n\r\n[build-system]\r\nrequires = [\"poetry-core>=2.0.0,<3.0.0\"]\r\nbuild-backend = \"poetry.core.masonry.api\"\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pyproject.toml b/pyproject.toml
+--- a/pyproject.toml	(revision 9492d32db716e2b775e9fad2c4de119dacf887f9)
++++ b/pyproject.toml	(date 1747397668950)
+@@ -28,3 +28,12 @@
+ [build-system]
+ requires = ["poetry-core>=2.0.0,<3.0.0"]
+ build-backend = "poetry.core.masonry.api"
++
++[tool.bumpversion]
++current_version = "0.1.1"
++commit = true
++tag = true
++
++[tool.bumpversion.files]
++"pyproject.toml" = {}
++"src/repeatradar/__init__.py" = {}
+\ No newline at end of file
