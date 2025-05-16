@@ -22,6 +22,9 @@ dependencies = [
 [tool.poetry]
 packages = [{include = "repeatradar", from = "src"}]
 
+[tool.pytest]
+pythonpath = ["src"]
+
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
