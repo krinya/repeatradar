@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from repeatradar.aux import create_sample_data, filter_for_name
+from repeatradar import create_sample_data, filter_for_name
 
 class TestDataFunctions:
     def test_create_sample_data(self):
