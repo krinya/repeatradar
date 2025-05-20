@@ -9,6 +9,6 @@ A package for creating cohort retention calculation and visualizations.
 pip install repeatradar
 ```
 
-# 
+# Etc.
 
 (under development)

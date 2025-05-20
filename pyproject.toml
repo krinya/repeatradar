@@ -17,7 +17,9 @@ keywords = ["cohort", "retention", "calculation", "visualization"]
 requires-python = ">=3.10"
 
 dependencies = [
-    "pandas (>=2.2.3,<3.0.0)"
+    "pandas (>=2.2.3,<3.0.0)",
+    "numpy (>=2.2.6,<3.0.0)",
+    "datetime (>=5.5,<6.0)"
 ]
 
 [tool.poetry]
