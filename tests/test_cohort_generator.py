@@ -37,8 +37,8 @@ def test_generate_cohort_data_runs_without_error(sample_ecommerce_data: pd.DataF
     try:
         result_df = generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='purchase_date',
-            user_column_name='customer_id'
+            date_column='purchase_date',
+            user_column='customer_id'
         )
         assert isinstance(result_df, pd.DataFrame), "Function should return a pandas DataFrame."
         assert not result_df.empty, "Resulting DataFrame should not be empty."
@@ -46,9 +46,9 @@ def test_generate_cohort_data_runs_without_error(sample_ecommerce_data: pd.DataF
         # Test with value column and different aggregation
         result_value_df = generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='purchase_date',
-            user_column_name='customer_id',
-            value_column_name='purchase_amount',
+            date_column='purchase_date',
+            user_column='customer_id',
+            value_column='purchase_amount',
             aggregation_function='sum'
         )
         assert isinstance(result_value_df, pd.DataFrame), "Function should return a pandas DataFrame for value aggregation."
@@ -57,9 +57,9 @@ def test_generate_cohort_data_runs_without_error(sample_ecommerce_data: pd.DataF
         # Test with 'nunique' aggregation
         result_nunique_df = generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='purchase_date',
-            user_column_name='customer_id',
-            value_column_name='product_id',
+            date_column='purchase_date',
+            user_column='customer_id',
+            value_column='product_id',
             aggregation_function='nunique'
         )
         assert isinstance(result_nunique_df, pd.DataFrame), "Function should return a pandas DataFrame for nunique aggregation."
@@ -68,16 +68,35 @@ def test_generate_cohort_data_runs_without_error(sample_ecommerce_data: pd.DataF
         # Test long format
         result_long_df = generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='purchase_date',
-            user_column_name='customer_id',
+            date_column='purchase_date',
+            user_column='customer_id',
             output_format='long'
         )
         assert isinstance(result_long_df, pd.DataFrame), "Function should return a pandas DataFrame for long format."
         assert not result_long_df.empty, "Resulting DataFrame for long format should not be empty."
-        assert 'first_period' in result_long_df.columns
+        assert 'cohort_period' in result_long_df.columns
         assert 'period_number' in result_long_df.columns
         assert 'metric_value' in result_long_df.columns
 
+        # Test retention rate calculation
+        result_retention_df = generate_cohort_data(
+            data=sample_ecommerce_data,
+            date_column='purchase_date',
+            user_column='customer_id',
+            calculate_retention_rate=True
+        )
+        assert isinstance(result_retention_df, pd.DataFrame), "Function should return a pandas DataFrame for retention rates."
+        assert not result_retention_df.empty, "Resulting DataFrame for retention rates should not be empty."
+
+        # Test period_duration as string
+        result_weekly_df = generate_cohort_data(
+            data=sample_ecommerce_data,
+            date_column='purchase_date',
+            user_column='customer_id',
+            period_duration='W'
+        )
+        assert isinstance(result_weekly_df, pd.DataFrame), "Function should return a pandas DataFrame for weekly periods."
+        assert not result_weekly_df.empty, "Resulting DataFrame for weekly periods should not be empty."
 
     except Exception as e:
         pytest.fail(f"generate_cohort_data raised an exception: {e}")
@@ -87,15 +106,15 @@ def test_generate_cohort_data_invalid_inputs(sample_ecommerce_data: pd.DataFrame
     with pytest.raises(ValueError, match="Column 'non_existent_date_col' not found in data"):
         generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='non_existent_date_col',
-            user_column_name='customer_id'
+            date_column='non_existent_date_col',
+            user_column='customer_id'
         )
 
     with pytest.raises(ValueError, match="Column 'non_existent_user_col' not found in data"):
         generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='purchase_date',
-            user_column_name='non_existent_user_col'
+            date_column='purchase_date',
+            user_column='non_existent_user_col'
         )
     
     data_copy = sample_ecommerce_data.copy()
@@ -103,22 +122,32 @@ def test_generate_cohort_data_invalid_inputs(sample_ecommerce_data: pd.DataFrame
     with pytest.raises(TypeError, match="Column 'purchase_date_str' must be of datetime type"):
         generate_cohort_data(
             data=data_copy,
-            datetime_column_name='purchase_date_str',
-            user_column_name='customer_id'
+            date_column='purchase_date_str',
+            user_column='customer_id'
         )
 
     with pytest.raises(ValueError, match="output_format must be either 'long' or 'pivot'"):
         generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='purchase_date',
-            user_column_name='customer_id',
+            date_column='purchase_date',
+            user_column='customer_id',
             output_format='invalid_format' # type: ignore
         )
 
     with pytest.raises(ValueError, match="Column 'non_existent_value_col' not found in data"):
         generate_cohort_data(
             data=sample_ecommerce_data,
-            datetime_column_name='purchase_date',
-            user_column_name='customer_id',
-            value_column_name='non_existent_value_col'
+            date_column='purchase_date',
+            user_column='customer_id',
+            value_column='non_existent_value_col'
+        )
+
+    # Test retention rate validation
+    with pytest.raises(ValueError, match="Retention rate calculation is only available for user count analysis"):
+        generate_cohort_data(
+            data=sample_ecommerce_data,
+            date_column='purchase_date',
+            user_column='customer_id',
+            value_column='purchase_amount',
+            calculate_retention_rate=True
         )

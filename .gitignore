@@ -6,6 +6,9 @@ tests/__pycache__
 tests/__pycache__/*
 src/repeatradar/__pycache__
 src/repeatradar/__pycache__/*
+.github/commit-message-generation.md
+.github/copilot-instructions.md
+
 
 # Python Bytecode and Cache
 __pycache__/
