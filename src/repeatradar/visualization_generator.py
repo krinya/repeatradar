@@ -94,10 +94,6 @@ def plot_cohort_heatmap(
     cohort_data_display = cohort_data.copy()
     cohort_data_display.index = cohort_data_display.index.astype(str)
     
-    # Reverse y-axis if requested
-    if reverse_y_axis:
-        cohort_data_display = cohort_data_display.iloc[::-1]
-    
     # Create heatmap using go.Heatmap for better control
     fig = go.Figure(data=go.Heatmap(
         z=cohort_data_display.values,
@@ -118,7 +114,8 @@ def plot_cohort_heatmap(
         yaxis_title="Cohort (Acquisition Period)",
         font=dict(size=12),
         width=width,
-        height=height
+        height=height,
+        yaxis=dict(autorange='reversed' if reverse_y_axis else True)
     )
     
     return fig
@@ -211,7 +208,8 @@ def plot_cohort_comparison(
     title: Optional[str] = None,
     width: int = 1000,
     height: int = 600,
-    show_colorscale: bool = True
+    show_colorscale: bool = True,
+    reverse_y_axis: bool = False
 ) -> go.Figure:
     """
     Create subplots comparing different cohort metrics side by side.
@@ -230,6 +228,8 @@ def plot_cohort_comparison(
         Height of the plot in pixels
     show_colorscale : bool, default True
         Whether to show the color scale bars for the heatmaps
+    reverse_y_axis : bool, default False
+        Whether to reverse the y-axis order (newer cohorts at top)
         
     Returns:
     --------
@@ -289,6 +289,11 @@ def plot_cohort_comparison(
         height=height,
         font=dict(size=10)
     )
+    
+    # Update y-axis for all subplots if reverse_y_axis is True
+    if reverse_y_axis:
+        for i in range(1, rows * cols + 1):
+            fig.update_yaxes(autorange='reversed', row=(i-1)//cols + 1, col=(i-1)%cols + 1)
     
     return fig
 
@@ -487,7 +492,8 @@ def create_cohort_dashboard(
     retention_data: Optional[pd.DataFrame] = None,
     revenue_data: Optional[pd.DataFrame] = None,
     title: str = "Cohort Analysis Dashboard",
-    show_colorscale: bool = True
+    show_colorscale: bool = True,
+    reverse_y_axis: bool = False
 ) -> go.Figure:
     """
     Create a comprehensive dashboard with multiple cohort visualizations.
@@ -504,6 +510,8 @@ def create_cohort_dashboard(
         Main title for the dashboard
     show_colorscale : bool, default True
         Whether to show color scales for the heatmaps
+    reverse_y_axis : bool, default False
+        Whether to reverse the y-axis order (newer cohorts at top)
         
     Returns:
     --------
@@ -608,5 +616,10 @@ def create_cohort_dashboard(
         height=800 if rows > 1 else 500,
         font=dict(size=10)
     )
+    
+    # Update y-axis for all subplots if reverse_y_axis is True
+    if reverse_y_axis:
+        for i in range(1, rows * cols + 1):
+            fig.update_yaxes(autorange='reversed', row=(i-1)//cols + 1, col=(i-1)%cols + 1)
     
     return fig

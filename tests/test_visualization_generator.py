@@ -152,9 +152,8 @@ class TestCohortHeatmap:
         fig = plot_cohort_heatmap(sample_cohort_data, reverse_y_axis=True)
         
         assert isinstance(fig, go.Figure)
-        # Check that the y-axis labels are in reverse order
-        y_labels = fig.data[0].y
-        assert list(y_labels) == list(sample_cohort_data.index.astype(str)[::-1])
+        # Check that the y-axis autorange is set to 'reversed'
+        assert fig.layout.yaxis.autorange == 'reversed'
     
     def test_heatmap_show_values_with_formatting(self, sample_cohort_data):
         """Test heatmap with values shown and custom formatting."""
@@ -250,6 +249,26 @@ class TestCohortComparison:
         # Check that colorscale is hidden for both heatmaps
         assert fig.data[0].showscale == False
         assert fig.data[1].showscale == False
+    
+    def test_comparison_reversed_y_axis(self, sample_cohort_data, sample_revenue_data):
+        """Test comparison with reversed y-axis."""
+        cohort_dict = {
+            'users': sample_cohort_data,
+            'revenue': sample_revenue_data
+        }
+        
+        fig = plot_cohort_comparison(cohort_dict, reverse_y_axis=True)
+        
+        assert isinstance(fig, go.Figure)
+        # Check that y-axis autorange is set to 'reversed' for all subplots
+        # Since we have 2 metrics, they should be in a 1x2 layout
+        for i in range(1, 3):  # subplot positions 1 and 2
+            row = (i-1) // 2 + 1
+            col = (i-1) % 2 + 1
+            yaxis_name = f'yaxis{i}' if i > 1 else 'yaxis'
+            if hasattr(fig.layout, yaxis_name):
+                yaxis = getattr(fig.layout, yaxis_name)
+                assert yaxis.autorange == 'reversed'
 
 
 class TestPeriodComparison:
@@ -336,6 +355,37 @@ class TestCohortDashboard:
         fig = create_cohort_dashboard(sample_cohort_data, title=custom_title)
         
         assert fig.layout.title.text == custom_title
+    
+    def test_dashboard_reversed_y_axis(self, sample_cohort_data, sample_retention_data, sample_revenue_data):
+        """Test dashboard with reversed y-axis."""
+        fig = create_cohort_dashboard(
+            sample_cohort_data, 
+            retention_data=sample_retention_data,
+            revenue_data=sample_revenue_data,
+            reverse_y_axis=True
+        )
+        
+        assert isinstance(fig, go.Figure)
+        # With 3 metrics, the layout should be 2x2, so we have 3 subplots with data
+        # Check that y-axis autorange is set to 'reversed' for all subplots
+        for i in range(1, 4):  # We have 3 subplots with data
+            yaxis_name = f'yaxis{i}' if i > 1 else 'yaxis'
+            if hasattr(fig.layout, yaxis_name):
+                yaxis = getattr(fig.layout, yaxis_name)
+                assert yaxis.autorange == 'reversed'
+    
+    def test_dashboard_without_colorscale(self, sample_cohort_data, sample_retention_data):
+        """Test dashboard without showing colorscale."""
+        fig = create_cohort_dashboard(
+            sample_cohort_data, 
+            retention_data=sample_retention_data,
+            show_colorscale=False
+        )
+        
+        assert isinstance(fig, go.Figure)
+        # Check that colorscale is hidden for heatmaps
+        assert fig.data[0].showscale == False
+        assert fig.data[1].showscale == False
 
 
 class TestEndToEndVisualization:
