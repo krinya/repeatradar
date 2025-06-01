@@ -41,7 +41,7 @@ def generate_cohort_data(
     value_column: Optional[str] = None,
     aggregation_function: Literal['sum', 'mean', 'count', 'median', 'min', 'max', 'nunique'] = 'sum',
     cohort_period: Literal['D', 'W', 'M', 'Q', 'Y'] = 'M', 
-    period_duration: Union[int, Literal['D', 'W', 'M', 'Q', 'Y']] = 'M',
+    period_duration: Union[int, Literal['D', 'W', 'M', 'Q', 'Y']] = 30,
     output_format: Literal['long', 'pivot'] = 'pivot',
     calculate_retention_rate: bool = False
 ) -> pd.DataFrame:

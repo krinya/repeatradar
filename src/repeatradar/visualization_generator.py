@@ -20,7 +20,9 @@ def plot_cohort_heatmap(
     show_values: bool = True,
     value_format: str = ".0f",
     width: int = 800,
-    height: int = 600
+    height: int = 600,
+    show_colorscale: bool = True,
+    reverse_y_axis: bool = False
 ) -> go.Figure:
     """
     Create a heatmap visualization of cohort data.
@@ -41,6 +43,10 @@ def plot_cohort_heatmap(
         Width of the plot in pixels
     height : int, default 600
         Height of the plot in pixels
+    show_colorscale : bool, default True
+        Whether to show the color scale bar on the right side of the plot
+    reverse_y_axis : bool, default False
+        Whether to reverse the y-axis order (newer cohorts at top)
         
     Returns:
     --------
@@ -88,39 +94,31 @@ def plot_cohort_heatmap(
     cohort_data_display = cohort_data.copy()
     cohort_data_display.index = cohort_data_display.index.astype(str)
     
-    # Create heatmap
-    fig = px.imshow(
-        cohort_data_display.values,
-        labels=dict(x="Period", y="Cohort", color="Value"),
+    # Reverse y-axis if requested
+    if reverse_y_axis:
+        cohort_data_display = cohort_data_display.iloc[::-1]
+    
+    # Create heatmap using go.Heatmap for better control
+    fig = go.Figure(data=go.Heatmap(
+        z=cohort_data_display.values,
         x=[f"Period {i}" for i in cohort_data_display.columns],
         y=cohort_data_display.index,
-        color_continuous_scale=color_scale,
-        title=title,
-        width=width,
-        height=height
-    )
-    
-    # Add text annotations if requested
-    if show_values:
-        annotations = []
-        for i, row in enumerate(cohort_data_display.index):
-            for j, col in enumerate(cohort_data_display.columns):
-                value = cohort_data_display.iloc[i, j]
-                annotations.append(
-                    dict(
-                        x=j, y=i,
-                        text=f"{value:{value_format}}",
-                        showarrow=False,
-                        font=dict(color="white" if value > cohort_data_display.values.max() * 0.5 else "black")
-                    )
-                )
-        fig.update_layout(annotations=annotations)
+        colorscale=color_scale,
+        showscale=show_colorscale,
+        hoverongaps=False,
+        text=cohort_data_display.values if show_values else None,
+        texttemplate=f"%{{text:{value_format}}}" if show_values else None,
+        textfont={"size": 12, "color": "white"}
+    ))
     
     # Update layout
     fig.update_layout(
+        title=title,
         xaxis_title="Analysis Period",
         yaxis_title="Cohort (Acquisition Period)",
-        font=dict(size=12)
+        font=dict(size=12),
+        width=width,
+        height=height
     )
     
     return fig
@@ -212,7 +210,8 @@ def plot_cohort_comparison(
     metric_names: Optional[Dict[str, str]] = None,
     title: Optional[str] = None,
     width: int = 1000,
-    height: int = 600
+    height: int = 600,
+    show_colorscale: bool = True
 ) -> go.Figure:
     """
     Create subplots comparing different cohort metrics side by side.
@@ -229,6 +228,8 @@ def plot_cohort_comparison(
         Width of the plot in pixels
     height : int, default 600
         Height of the plot in pixels
+    show_colorscale : bool, default True
+        Whether to show the color scale bars for the heatmaps
         
     Returns:
     --------
@@ -275,7 +276,7 @@ def plot_cohort_comparison(
             x=[f"P{j}" for j in data_display.columns],
             y=data_display.index,
             colorscale="Blues",
-            showscale=True if i == 0 else False,
+            showscale=show_colorscale and (i == 0),  # Only show colorscale for first subplot
             hoverongaps=False
         )
         
@@ -485,7 +486,8 @@ def create_cohort_dashboard(
     cohort_data: pd.DataFrame,
     retention_data: Optional[pd.DataFrame] = None,
     revenue_data: Optional[pd.DataFrame] = None,
-    title: str = "Cohort Analysis Dashboard"
+    title: str = "Cohort Analysis Dashboard",
+    show_colorscale: bool = True
 ) -> go.Figure:
     """
     Create a comprehensive dashboard with multiple cohort visualizations.
@@ -500,6 +502,8 @@ def create_cohort_dashboard(
         Revenue cohort data
     title : str, default "Cohort Analysis Dashboard"
         Main title for the dashboard
+    show_colorscale : bool, default True
+        Whether to show color scales for the heatmaps
         
     Returns:
     --------
@@ -550,7 +554,7 @@ def create_cohort_dashboard(
             x=[f"P{i}" for i in cohort_display.columns],
             y=cohort_display.index,
             colorscale="Blues",
-            showscale=True,
+            showscale=show_colorscale,
             name="Users"
         ),
         row=1, col=1
@@ -568,7 +572,7 @@ def create_cohort_dashboard(
                 x=[f"P{i}" for i in retention_display.columns],
                 y=retention_display.index,
                 colorscale="RdYlBu_r",
-                showscale=True,
+                showscale=show_colorscale and n_plots >= 2,
                 name="Retention %"
             ),
             row=1, col=col_pos
@@ -591,7 +595,7 @@ def create_cohort_dashboard(
                 x=[f"P{i}" for i in revenue_display.columns],
                 y=revenue_display.index,
                 colorscale="Viridis",
-                showscale=True,
+                showscale=show_colorscale and n_plots > 2,
                 name="Revenue"
             ),
             row=row_pos, col=col_pos

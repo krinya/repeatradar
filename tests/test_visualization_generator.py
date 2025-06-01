@@ -138,6 +138,31 @@ class TestCohortHeatmap:
         
         assert fig.layout.width == 1000
         assert fig.layout.height == 700
+    
+    def test_heatmap_without_colorscale(self, sample_cohort_data):
+        """Test heatmap without showing colorscale."""
+        fig = plot_cohort_heatmap(sample_cohort_data, show_colorscale=False)
+        
+        assert isinstance(fig, go.Figure)
+        # Check that colorscale is hidden
+        assert fig.data[0].showscale == False
+    
+    def test_heatmap_reversed_y_axis(self, sample_cohort_data):
+        """Test heatmap with reversed y-axis."""
+        fig = plot_cohort_heatmap(sample_cohort_data, reverse_y_axis=True)
+        
+        assert isinstance(fig, go.Figure)
+        # Check that the y-axis labels are in reverse order
+        y_labels = fig.data[0].y
+        assert list(y_labels) == list(sample_cohort_data.index.astype(str)[::-1])
+    
+    def test_heatmap_show_values_with_formatting(self, sample_cohort_data):
+        """Test heatmap with values shown and custom formatting."""
+        fig = plot_cohort_heatmap(sample_cohort_data, show_values=True, value_format=".1f")
+        
+        assert isinstance(fig, go.Figure)
+        # Check that text template is set correctly
+        assert fig.data[0].texttemplate == "%{text:.1f}"
 
 
 class TestRetentionCurves:
@@ -211,6 +236,20 @@ class TestCohortComparison:
         
         assert isinstance(fig, go.Figure)
         assert len(fig.data) == 1
+    
+    def test_comparison_without_colorscale(self, sample_cohort_data, sample_revenue_data):
+        """Test comparison without showing colorscale."""
+        cohort_dict = {
+            'users': sample_cohort_data,
+            'revenue': sample_revenue_data
+        }
+        
+        fig = plot_cohort_comparison(cohort_dict, show_colorscale=False)
+        
+        assert isinstance(fig, go.Figure)
+        # Check that colorscale is hidden for both heatmaps
+        assert fig.data[0].showscale == False
+        assert fig.data[1].showscale == False
 
 
 class TestPeriodComparison:
@@ -396,6 +435,19 @@ class TestEndToEndVisualization:
         
         assert isinstance(fig, go.Figure)
         assert len(fig.data) >= 3
+    
+    def test_dashboard_without_colorscale(self, sample_cohort_data, sample_retention_data):
+        """Test dashboard without showing colorscales."""
+        fig = create_cohort_dashboard(
+            cohort_data=sample_cohort_data,
+            retention_data=sample_retention_data,
+            show_colorscale=False
+        )
+        
+        assert isinstance(fig, go.Figure)
+        # Check that colorscales are hidden
+        assert fig.data[0].showscale == False
+        assert fig.data[1].showscale == False
 
 
 class TestVisualizationErrorHandling:
