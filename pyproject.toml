@@ -10,7 +10,7 @@ authors = [
 readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/krinya/repeatradar"
-repistory = "https://github.com/krinya/repeatradar"
+repository = "https://github.com/krinya/repeatradar"
 
 keywords = ["cohort", "retention", "calculation", "visualization"]
 
