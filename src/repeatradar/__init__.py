@@ -1,7 +1,7 @@
 # repeatradar package initialization
 # Make the version easily accessible (matches pyproject.toml)
 
-__version__ = "0.4.3"
+__version__ = "0.4.4"
 
 # Import core functionality
 from .sample import greet, create_sample_data, filter_for_name
