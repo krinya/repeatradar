@@ -48,8 +48,10 @@ basic_cohorts = generate_cohort_data(
     period_duration=30       # Track in 30-day periods
 )
 
-print(basic_cohorts.head())
+basic_cohorts
 ```
+
+![User Cohort Table ](img/example_user_1.png)
 
 ### Cohort Visualizations
 
@@ -58,12 +60,18 @@ from repeatradar import plot_cohort_heatmap
 
 # Create an interactive heatmap
 heatmap_fig = plot_cohort_heatmap(
-    basic_cohorts, 
-    title="User Retention Cohorts",
-    color_scale="Blues"
+    cohort_data=basic_cohorts,
+    title="📊 User Retention",
+    color_scale="viridis",
+    show_values=True,
+    show_colorscale=False,
+    width=900,
+    height=600
 )
 heatmap_fig.show()
 ```
+
+![alt text](img/example_user_heatmap_1.png)
 
 For detailed examples and advanced usage, see our Jupyter notebooks:
 - **[📊 Cohort Calculation Examples](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb)** - Complete guide to generating different types of cohort data
