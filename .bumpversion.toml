@@ -32,5 +32,5 @@ replace = "__version__ = \"{new_version}\""
 
 [[tool.bumpversion.files]]
 filename = "docs/source/conf.py"
-search = "release = \'{current_version}\'"
-replace = "release = \'{new_version}\'"
+search = "release = \"{current_version}\""
+replace = "release = \"{new_version}\""
