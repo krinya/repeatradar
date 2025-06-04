@@ -16,7 +16,8 @@ def _get_period_offset_days(period: str) -> int:
         'W': 7,
         'M': 30,
         'Q': 90,
-        'Y': 365
+        'Y': 365,
+        
     }
     return period_mapping.get(period, 30)
 
