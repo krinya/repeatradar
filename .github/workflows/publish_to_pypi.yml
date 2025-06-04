@@ -10,25 +10,14 @@ on:
   pull_request:
     branches: [ main ] # Run tests on PRs targeting main
 
-# Add permissions for GitHub Pages deployment
+# Global permissions (minimal for most jobs)
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   test:
     name: Run Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
-    # Add environment for GitHub Pages deployment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    # Add permissions for this job
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     strategy:
       fail-fast: false # Don't cancel all jobs if one Python version fails
       matrix:
@@ -57,23 +46,56 @@ jobs:
         run: |
           poetry run sphinx-build -b html docs/source docs/_build/html
 
+      - name: Run tests with pytest
+        run: poetry run pytest tests/
+
+  docs:
+    name: Deploy Documentation to GitHub Pages
+    # Only run this job on pushes to main branch (not on tags or PRs)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          installer-parallel: true
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --with dev
+
+      - name: Build Sphinx documentation
+        run: |
+          poetry run sphinx-build -b html docs/source docs/_build/html
+
       - name: Setup Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v4
 
       - name: Upload Pages artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/_build/html
 
       - name: Deploy to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Run tests with pytest
-        run: poetry run pytest tests/
 
 
   publish:
@@ -87,6 +109,9 @@ jobs:
     environment:
       name: pypi
       url: https://pypi.org/p/repeatradar
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout code
