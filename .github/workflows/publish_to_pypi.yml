@@ -20,9 +20,13 @@ jobs:
   test:
     name: Run Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    # Add environment for GitHub Pages deployment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     # Add permissions for this job
     permissions:
-      contents: write
+      contents: read
       pages: write
       id-token: write
     strategy:
