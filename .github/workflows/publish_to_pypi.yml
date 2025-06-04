@@ -10,10 +10,21 @@ on:
   pull_request:
     branches: [ main ] # Run tests on PRs targeting main
 
+# Add permissions for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     name: Run Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    # Add permissions for this job
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     strategy:
       fail-fast: false # Don't cancel all jobs if one Python version fails
       matrix:
@@ -50,6 +61,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/_build/html
           destination_dir: repeatradar
+          force_orphan: true
 
       - name: Run tests with pytest
         run: poetry run pytest tests/
