@@ -29,3 +29,8 @@ replace = "version = \"{new_version}\""
 filename = "src/repeatradar/__init__.py"
 search = "__version__ = \"{current_version}\""
 replace = "__version__ = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "docs/source/conf.py
+search = "release = \'{current_version}\'"
+replace = "release = \'{new_version}\'"

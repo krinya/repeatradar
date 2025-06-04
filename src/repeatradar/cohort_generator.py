@@ -4,7 +4,13 @@ import numpy as np
 from datetime import datetime
 
 def _get_period_offset_days(period: str) -> int:
-    """Helper function to convert period strings to approximate days."""
+    """Convert period strings to approximate days for cohort analysis calculations.
+
+    :param period: Period abbreviation string
+    :type period: str
+    :return: Number of days corresponding to the period
+    :rtype: int
+    """
     period_mapping = {
         'D': 1,
         'W': 7,
@@ -15,7 +21,15 @@ def _get_period_offset_days(period: str) -> int:
     return period_mapping.get(period, 30)
 
 def _ensure_complete_periods(cohort_data_long: pd.DataFrame, first_period_col: str) -> pd.DataFrame:
-    """Ensure all cohorts have all possible periods with 0 values where missing."""
+    """Ensure all cohorts have all possible periods with 0 values where missing.
+
+    :param cohort_data_long: Long-format cohort data DataFrame
+    :type cohort_data_long: pd.DataFrame
+    :param first_period_col: Column name containing the first period (cohort) information
+    :type first_period_col: str
+    :return: Complete cohort data with all periods filled
+    :rtype: pd.DataFrame
+    """
     # Get all unique cohorts and all possible period numbers
     all_cohorts = cohort_data_long[first_period_col].unique()
     max_period = cohort_data_long['period_number'].max()
@@ -46,77 +60,70 @@ def generate_cohort_data(
     calculate_retention_rate: bool = False
 ) -> pd.DataFrame:
     """
-    Creates cohort analysis data in a specified format with optimized performance.
+    Create cohort analysis data in a specified format with optimized performance.
+    
     Supports both user retention analysis and transaction value analysis with retention rates.
-    
-    Parameters:
-    -----------
-    data : pd.DataFrame
-        The input data containing transaction information
-    date_column : str
-        Column name containing the datetime information
-    user_column : str
-        Column name containing the user/customer ID
-    value_column : Optional[str], default None
-        Column name containing values to aggregate (e.g., transaction amount)
-        If None, the function counts unique users (traditional cohort analysis)
-    aggregation_function : {'sum', 'mean', 'count', 'median', 'min', 'max', 'nunique'}, default 'sum'
-        Function to apply when aggregating values
-        Only used when value_column is provided
-        'nunique' counts the number of unique values in each group
-    cohort_period : {'D', 'W', 'M', 'Q', 'Y'}, default 'M'
-        Period to group cohorts by (how to define cohort acquisition periods)
-    period_duration : Union[int, Literal['D', 'W', 'M', 'Q', 'Y']], default 'M'
-        Duration of analysis periods. Can be number of days (int) or period string
-        If string: 'D'=daily, 'W'=weekly, 'M'=monthly, 'Q'=quarterly, 'Y'=yearly
-    output_format : {'long', 'pivot'}, default 'pivot'
-        Format of the output data - long format or pivot table
-    calculate_retention_rate : bool, default False
-        If True, calculates retention rate as percentage compared to period 0
-        Only applicable when value_column is None (user count analysis)
+    This function groups users into cohorts based on their acquisition period and tracks 
+    their activity or value in subsequent periods.
+
+    :param data: The input data containing transaction information
+    :type data: pd.DataFrame
+    :param date_column: Column name containing the datetime information
+    :type date_column: str
+    :param user_column: Column name containing the user/customer ID
+    :type user_column: str
+    :param value_column: Column name containing values to aggregate (e.g., transaction amount). If None, the function counts unique users (traditional cohort analysis), defaults to None
+    :type value_column: Optional[str], optional
+    :param aggregation_function: Function to apply when aggregating values. Only used when value_column is provided. 'nunique' counts the number of unique values in each group, defaults to 'sum'
+    :type aggregation_function: Literal['sum', 'mean', 'count', 'median', 'min', 'max', 'nunique'], optional
+    :param cohort_period: Period to group cohorts by (how to define cohort acquisition periods), defaults to 'M'
+    :type cohort_period: Literal['D', 'W', 'M', 'Q', 'Y'], optional
+    :param period_duration: Duration of analysis periods. Can be number of days (int) or period string. If string: 'D'=daily, 'W'=weekly, 'M'=monthly, 'Q'=quarterly, 'Y'=yearly, defaults to 30
+    :type period_duration: Union[int, Literal['D', 'W', 'M', 'Q', 'Y']], optional
+    :param output_format: Format of the output data - long format or pivot table, defaults to 'pivot'
+    :type output_format: Literal['long', 'pivot'], optional
+    :param calculate_retention_rate: If True, calculates retention rate as percentage compared to period 0. Only applicable when value_column is None (user count analysis), defaults to False
+    :type calculate_retention_rate: bool, optional
+    :raises ValueError: If required columns are not found in data or invalid parameters are provided
+    :raises TypeError: If date_column is not of datetime type
+    :return: Either a long-format DataFrame with columns [cohort_period, period_number, metric_value] or a pivoted DataFrame in triangle format with cohorts as rows and periods as columns. If calculate_retention_rate=True, values represent percentage retention rates
+    :rtype: pd.DataFrame
+
+    Examples::
+
+        # Basic user retention analysis
+        >>> user_cohorts = generate_cohort_data(
+        ...     data=df, 
+        ...     date_column='purchase_date',
+        ...     user_column='customer_id'
+        ... )
         
-    Returns:
-    --------
-    pd.DataFrame
-        Either a long-format DataFrame with columns [cohort_period, period_number, metric_value]
-        or a pivoted DataFrame in triangle format with cohorts as rows and periods as columns
-        If calculate_retention_rate=True, values represent percentage retention rates
+        # User retention with retention rates
+        >>> retention_rates = generate_cohort_data(
+        ...     data=df,
+        ...     date_column='purchase_date', 
+        ...     user_column='customer_id',
+        ...     calculate_retention_rate=True
+        ... )
         
-    Examples:
-    ---------
-    # Basic user retention analysis
-    >>> user_cohorts = generate_cohort_data(
-    ...     data=df, 
-    ...     date_column='purchase_date',
-    ...     user_column='customer_id'
-    ... )
-    
-    # User retention with retention rates
-    >>> retention_rates = generate_cohort_data(
-    ...     data=df,
-    ...     date_column='purchase_date', 
-    ...     user_column='customer_id',
-    ...     calculate_retention_rate=True
-    ... )
-    
-    # Revenue cohort analysis with weekly periods
-    >>> revenue_cohorts = generate_cohort_data(
-    ...     data=df, 
-    ...     date_column='purchase_date',
-    ...     user_column='customer_id',
-    ...     value_column='purchase_amount',
-    ...     period_duration='W',
-    ...     aggregation_function='sum'
-    ... )
-    
-    # Count unique products per cohort period
-    >>> unique_products = generate_cohort_data(
-    ...     data=df,
-    ...     date_column='purchase_date',
-    ...     user_column='customer_id',
-    ...     value_column='product_id',
-    ...     aggregation_function='nunique'
-    ... )
+        # Revenue cohort analysis with weekly periods
+        >>> revenue_cohorts = generate_cohort_data(
+        ...     data=df, 
+        ...     date_column='purchase_date',
+        ...     user_column='customer_id',
+        ...     value_column='purchase_amount',
+        ...     period_duration='W',
+        ...     aggregation_function='sum'
+        ... )
+        
+        # Count unique products per cohort period
+        >>> unique_products = generate_cohort_data(
+        ...     data=df,
+        ...     date_column='purchase_date',
+        ...     user_column='customer_id',
+        ...     value_column='product_id',
+        ...     aggregation_function='nunique'
+        ... )
     """
     # Input validation
     if date_column not in data.columns:

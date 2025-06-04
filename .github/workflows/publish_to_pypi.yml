@@ -38,8 +38,22 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --with dev
 
+      - name: Build Sphinx documentation
+        run: |
+          poetry run sphinx-build -b html docs/source docs/_build/html
+        
+      - name: Deploy Documentation to GitHub Pages
+        # Only deploy docs on main branch pushes (not PRs or other branches)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html
+          destination_dir: repeatradar
+
       - name: Run tests with pytest
         run: poetry run pytest tests/
+
 
   publish:
     name: Build and Publish to PyPI

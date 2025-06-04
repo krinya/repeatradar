@@ -3,12 +3,12 @@ import pandas as pd
 def greet(name: str) -> str:
     """
     Generates a friendly greeting.
-    Args:
-        name: The name of the person to greet.
-    Returns:
-        A greeting string.
-    Raises:
-        TypeError: If the input name is not a string.
+    
+    :param name: The name of the person to greet
+    :type name: str
+    :raises TypeError: If the input name is not a string
+    :return: A greeting string
+    :rtype: str
     """
     if not isinstance(name, str):
         raise TypeError("Input 'name' must be a string")
@@ -20,8 +20,9 @@ def greet(name: str) -> str:
 def create_sample_data() -> pd.DataFrame:
     """
     Generates a sample DataFrame.
-    Returns:
-        A DataFrame with sample data.
+    
+    :return: A DataFrame with sample data
+    :rtype: pd.DataFrame
     """
     data = {
         'Name': ['Alice', 'Bob', 'Charlie'],
@@ -33,11 +34,14 @@ def create_sample_data() -> pd.DataFrame:
 def filter_for_name(df: pd.DataFrame, name: str) -> pd.DataFrame:
     """
     Filters the DataFrame for a specific name.
-    Args:
-        df: The DataFrame to filter.
-        name: The name to filter by.
-    Returns:
-        A filtered DataFrame.
+    
+    :param df: The DataFrame to filter
+    :type df: pd.DataFrame
+    :param name: The name to filter by
+    :type name: str
+    :raises TypeError: If the input name is not a string
+    :return: A filtered DataFrame
+    :rtype: pd.DataFrame
     """
     if not isinstance(name, str):
         raise TypeError("Input 'name' must be a string")

@@ -39,6 +39,7 @@ ENV/
 
 # Sphinx documentation build output
 docs/_build/
+_build/
 
 # VS Code specific
 .vscode/

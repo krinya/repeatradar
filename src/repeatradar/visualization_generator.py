@@ -22,42 +22,42 @@ def plot_cohort_heatmap(
     width: int = 800,
     height: int = 600,
     show_colorscale: bool = True,
-    reverse_y_axis: bool = False
+    reverse_y_axis: bool = True
 ) -> go.Figure:
     """
     Create a heatmap visualization of cohort data.
     
-    Parameters:
-    -----------
-    cohort_data : pd.DataFrame
-        Cohort data in pivot format (cohorts as rows, periods as columns)
-    title : Optional[str], default None
-        Title for the plot. If None, a default title will be generated
-    color_scale : str, default "Blues"
-        Color scale for the heatmap. Common options: "Blues", "Viridis", "RdYlBu", "Plasma"
-    show_values : bool, default True
-        Whether to show values on the heatmap cells
-    value_format : str, default ".0f"
-        Format string for displaying values (e.g., ".0f" for integers, ".1f" for 1 decimal)
-    width : int, default 800
-        Width of the plot in pixels
-    height : int, default 600
-        Height of the plot in pixels
-    show_colorscale : bool, default True
-        Whether to show the color scale bar on the right side of the plot
-    reverse_y_axis : bool, default False
-        Whether to reverse the y-axis order (newer cohorts at top)
-        
-    Returns:
-    --------
-    plotly.graph_objects.Figure
-        Plotly figure object for the heatmap
-        
-    Examples:
-    ---------
-    >>> cohort_data = generate_cohort_data(df, date_column='date', user_column='user')
-    >>> fig = plot_cohort_heatmap(cohort_data, title="User Retention Cohorts")
-    >>> fig.show()
+    This function generates an interactive heatmap using Plotly to visualize cohort analysis 
+    results. The heatmap displays cohorts on the y-axis and analysis periods on the x-axis, 
+    with color intensity representing the metric values.
+
+    :param cohort_data: Cohort data in pivot format (cohorts as rows, periods as columns)
+    :type cohort_data: pd.DataFrame
+    :param title: Title for the plot. If None, a default title will be generated, defaults to None
+    :type title: Optional[str], optional
+    :param color_scale: Color scale for the heatmap. Common options: "Blues", "Viridis", "RdYlBu", "Plasma", defaults to "Blues"
+    :type color_scale: str, optional
+    :param show_values: Whether to show values on the heatmap cells, defaults to True
+    :type show_values: bool, optional
+    :param value_format: Format string for displaying values (e.g., ".0f" for integers, ".1f" for 1 decimal), defaults to ".0f"
+    :type value_format: str, optional
+    :param width: Width of the plot in pixels, defaults to 800
+    :type width: int, optional
+    :param height: Height of the plot in pixels, defaults to 600
+    :type height: int, optional
+    :param show_colorscale: Whether to show the color scale bar on the right side of the plot, defaults to True
+    :type show_colorscale: bool, optional
+    :param reverse_y_axis: Whether to reverse the y-axis order (newer cohorts at top), defaults to True
+    :type reverse_y_axis: bool, optional
+    :raises ValueError: If input DataFrame is empty or invalid color scale is provided
+    :return: Plotly figure object for the heatmap
+    :rtype: go.Figure
+
+    Examples::
+
+        >>> cohort_data = generate_cohort_data(df, date_column='date', user_column='user')
+        >>> fig = plot_cohort_heatmap(cohort_data, title="User Retention Cohorts")
+        >>> fig.show()
     """
     # Validate input
     if cohort_data.empty:
@@ -132,32 +132,31 @@ def plot_retention_curves(
     """
     Create line plots showing retention curves for different cohorts.
     
-    Parameters:
-    -----------
-    retention_data : pd.DataFrame
-        Retention rate data in pivot format (should be retention percentages)
-    title : Optional[str], default None
-        Title for the plot
-    show_legend : bool, default True
-        Whether to show the legend
-    width : int, default 900
-        Width of the plot in pixels
-    height : int, default 600
-        Height of the plot in pixels
-    max_cohorts : Optional[int], default 10
-        Maximum number of cohorts to display (None for all)
-        
-    Returns:
-    --------
-    plotly.graph_objects.Figure
-        Plotly figure object for the retention curves
-        
-    Examples:
-    ---------
-    >>> retention_data = generate_cohort_data(df, date_column='date', user_column='user', 
-    ...                                       calculate_retention_rate=True)
-    >>> fig = plot_retention_curves(retention_data)
-    >>> fig.show()
+    This function generates an interactive line chart showing how retention rates change 
+    over time for different cohorts. Each line represents a cohort, and the x-axis 
+    represents analysis periods while the y-axis shows retention rates.
+
+    :param retention_data: Retention rate data in pivot format (should be retention percentages)
+    :type retention_data: pd.DataFrame
+    :param title: Title for the plot, defaults to None
+    :type title: Optional[str], optional
+    :param show_legend: Whether to show the legend, defaults to True
+    :type show_legend: bool, optional
+    :param width: Width of the plot in pixels, defaults to 900
+    :type width: int, optional
+    :param height: Height of the plot in pixels, defaults to 600
+    :type height: int, optional
+    :param max_cohorts: Maximum number of cohorts to display (None for all), defaults to 10
+    :type max_cohorts: Optional[int], optional
+    :return: Plotly figure object for the retention curves
+    :rtype: go.Figure
+
+    Examples::
+
+        >>> retention_data = generate_cohort_data(df, date_column='date', user_column='user', 
+        ...                                       calculate_retention_rate=True)
+        >>> fig = plot_retention_curves(retention_data)
+        >>> fig.show()
     """
     if title is None:
         title = "Cohort Retention Curves"
@@ -209,40 +208,35 @@ def plot_cohort_comparison(
     width: int = 1000,
     height: int = 600,
     show_colorscale: bool = True,
-    reverse_y_axis: bool = False
+    reverse_y_axis: bool = True
 ) -> go.Figure:
     """
     Create subplots comparing different cohort metrics side by side.
     
-    Parameters:
-    -----------
-    cohort_data_dict : Dict[str, pd.DataFrame]
-        Dictionary mapping metric names to cohort data DataFrames
-    metric_names : Optional[Dict[str, str]], default None
-        Dictionary mapping keys to display names for metrics
-    title : Optional[str], default None
-        Main title for the plot
-    width : int, default 1000
-        Width of the plot in pixels
-    height : int, default 600
-        Height of the plot in pixels
-    show_colorscale : bool, default True
-        Whether to show the color scale bars for the heatmaps
-    reverse_y_axis : bool, default False
-        Whether to reverse the y-axis order (newer cohorts at top)
-        
-    Returns:
-    --------
-    plotly.graph_objects.Figure
-        Plotly figure object with subplots
-        
-    Examples:
-    ---------
-    >>> user_data = generate_cohort_data(df, date_column='date', user_column='user')
-    >>> revenue_data = generate_cohort_data(df, date_column='date', user_column='user', 
-    ...                                     value_column='revenue', aggregation_function='sum')
-    >>> fig = plot_cohort_comparison({'users': user_data, 'revenue': revenue_data})
-    >>> fig.show()
+    :param cohort_data_dict: Dictionary mapping metric names to cohort data DataFrames
+    :type cohort_data_dict: Dict[str, pd.DataFrame]
+    :param metric_names: Dictionary mapping keys to display names for metrics, defaults to None
+    :type metric_names: Optional[Dict[str, str]], optional
+    :param title: Main title for the plot, defaults to None
+    :type title: Optional[str], optional
+    :param width: Width of the plot in pixels, defaults to 1000
+    :type width: int, optional
+    :param height: Height of the plot in pixels, defaults to 600
+    :type height: int, optional
+    :param show_colorscale: Whether to show the color scale bars for the heatmaps, defaults to True
+    :type show_colorscale: bool, optional
+    :param reverse_y_axis: Whether to reverse the y-axis order (newer cohorts at top), defaults to True
+    :type reverse_y_axis: bool, optional
+    :return: Plotly figure object with subplots
+    :rtype: go.Figure
+
+    Examples::
+
+        >>> user_data = generate_cohort_data(df, date_column='date', user_column='user')
+        >>> revenue_data = generate_cohort_data(df, date_column='date', user_column='user', 
+        ...                                     value_column='revenue', aggregation_function='sum')
+        >>> fig = plot_cohort_comparison({'users': user_data, 'revenue': revenue_data})
+        >>> fig.show()
     """
     if title is None:
         title = "Cohort Metrics Comparison"
@@ -309,31 +303,27 @@ def plot_period_comparison(
     """
     Compare specific periods across all cohorts.
     
-    Parameters:
-    -----------
-    cohort_data : pd.DataFrame
-        Cohort data in pivot format
-    periods_to_compare : Optional[list], default None
-        List of periods to compare. If None, uses [0, 1, 2, 3]
-    chart_type : {"bar", "line"}, default "bar"
-        Type of chart to create
-    title : Optional[str], default None
-        Title for the plot
-    width : int, default 800
-        Width of the plot in pixels
-    height : int, default 500
-        Height of the plot in pixels
-        
-    Returns:
-    --------
-    plotly.graph_objects.Figure
-        Plotly figure object
-        
-    Examples:
-    ---------
-    >>> cohort_data = generate_cohort_data(df, date_column='date', user_column='user')
-    >>> fig = plot_period_comparison(cohort_data, periods_to_compare=[0, 1, 3, 6])
-    >>> fig.show()
+    :param cohort_data: Cohort data in pivot format
+    :type cohort_data: pd.DataFrame
+    :param periods_to_compare: List of periods to compare. If None, uses [0, 1, 2, 3], defaults to None
+    :type periods_to_compare: Optional[list], optional
+    :param chart_type: Type of chart to create, defaults to "bar"
+    :type chart_type: Literal["bar", "line"], optional
+    :param title: Title for the plot, defaults to None
+    :type title: Optional[str], optional
+    :param width: Width of the plot in pixels, defaults to 800
+    :type width: int, optional
+    :param height: Height of the plot in pixels, defaults to 500
+    :type height: int, optional
+    :raises ValueError: If none of the specified periods are available in the data
+    :return: Plotly figure object
+    :rtype: go.Figure
+
+    Examples::
+
+        >>> cohort_data = generate_cohort_data(df, date_column='date', user_column='user')
+        >>> fig = plot_period_comparison(cohort_data, periods_to_compare=[0, 1, 3, 6])
+        >>> fig.show()
     """
     if periods_to_compare is None:
         periods_to_compare = [0, 1, 2, 3]
@@ -399,27 +389,22 @@ def plot_cohort_summary_stats(
     """
     Create summary statistics visualization for cohort data.
     
-    Parameters:
-    -----------
-    cohort_data : pd.DataFrame
-        Cohort data in pivot format
-    title : Optional[str], default None
-        Title for the plot
-    width : int, default 1200
-        Width of the plot in pixels
-    height : int, default 400
-        Height of the plot in pixels
-        
-    Returns:
-    --------
-    plotly.graph_objects.Figure
-        Plotly figure object with summary statistics
-        
-    Examples:
-    ---------
-    >>> cohort_data = generate_cohort_data(df, date_column='date', user_column='user')
-    >>> fig = plot_cohort_summary_stats(cohort_data)
-    >>> fig.show()
+    :param cohort_data: Cohort data in pivot format
+    :type cohort_data: pd.DataFrame
+    :param title: Title for the plot, defaults to None
+    :type title: Optional[str], optional
+    :param width: Width of the plot in pixels, defaults to 1200
+    :type width: int, optional
+    :param height: Height of the plot in pixels, defaults to 400
+    :type height: int, optional
+    :return: Plotly figure object with summary statistics
+    :rtype: go.Figure
+
+    Examples::
+
+        >>> cohort_data = generate_cohort_data(df, date_column='date', user_column='user')
+        >>> fig = plot_cohort_summary_stats(cohort_data)
+        >>> fig.show()
     """
     if title is None:
         title = "Cohort Summary Statistics by Period"
@@ -493,40 +478,35 @@ def create_cohort_dashboard(
     revenue_data: Optional[pd.DataFrame] = None,
     title: str = "Cohort Analysis Dashboard",
     show_colorscale: bool = True,
-    reverse_y_axis: bool = False
+    reverse_y_axis: bool = True
 ) -> go.Figure:
     """
     Create a comprehensive dashboard with multiple cohort visualizations.
     
-    Parameters:
-    -----------
-    cohort_data : pd.DataFrame
-        Main cohort data (usually user counts)
-    retention_data : Optional[pd.DataFrame], default None
-        Retention rate data (percentages)
-    revenue_data : Optional[pd.DataFrame], default None
-        Revenue cohort data
-    title : str, default "Cohort Analysis Dashboard"
-        Main title for the dashboard
-    show_colorscale : bool, default True
-        Whether to show color scales for the heatmaps
-    reverse_y_axis : bool, default False
-        Whether to reverse the y-axis order (newer cohorts at top)
-        
-    Returns:
-    --------
-    plotly.graph_objects.Figure
-        Plotly figure object with multiple subplots
-        
-    Examples:
-    ---------
-    >>> user_data = generate_cohort_data(df, date_column='date', user_column='user')
-    >>> retention_data = generate_cohort_data(df, date_column='date', user_column='user', 
-    ...                                       calculate_retention_rate=True)
-    >>> revenue_data = generate_cohort_data(df, date_column='date', user_column='user',
-    ...                                     value_column='revenue', aggregation_function='sum')
-    >>> fig = create_cohort_dashboard(user_data, retention_data, revenue_data)
-    >>> fig.show()
+    :param cohort_data: Main cohort data (usually user counts)
+    :type cohort_data: pd.DataFrame
+    :param retention_data: Retention rate data (percentages), defaults to None
+    :type retention_data: Optional[pd.DataFrame], optional
+    :param revenue_data: Revenue cohort data, defaults to None
+    :type revenue_data: Optional[pd.DataFrame], optional
+    :param title: Main title for the dashboard, defaults to "Cohort Analysis Dashboard"
+    :type title: str, optional
+    :param show_colorscale: Whether to show color scales for the heatmaps, defaults to True
+    :type show_colorscale: bool, optional
+    :param reverse_y_axis: Whether to reverse the y-axis order (newer cohorts at top), defaults to True
+    :type reverse_y_axis: bool, optional
+    :return: Plotly figure object with multiple subplots
+    :rtype: go.Figure
+
+    Examples::
+
+        >>> user_data = generate_cohort_data(df, date_column='date', user_column='user')
+        >>> retention_data = generate_cohort_data(df, date_column='date', user_column='user', 
+        ...                                       calculate_retention_rate=True)
+        >>> revenue_data = generate_cohort_data(df, date_column='date', user_column='user',
+        ...                                     value_column='revenue', aggregation_function='sum')
+        >>> fig = create_cohort_dashboard(user_data, retention_data, revenue_data)
+        >>> fig.show()
     """
     # Determine subplot layout
     n_plots = 1 + (1 if retention_data is not None else 0) + (1 if revenue_data is not None else 0)
