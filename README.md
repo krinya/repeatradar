@@ -51,7 +51,7 @@ basic_cohorts = generate_cohort_data(
 basic_cohorts
 ```
 
-![User Cohort Table ](img/example_user_1.png)
+![User Cohort Table ](https://raw.githubusercontent.com/krinya/repeatradar/refs/heads/main/img/example_user_1.png)
 
 ### Cohort Visualizations
 
@@ -71,7 +71,7 @@ heatmap_fig = plot_cohort_heatmap(
 heatmap_fig.show()
 ```
 
-![alt text](img/example_user_heatmap_1.png)
+![heatmap of user cohort table](https://raw.githubusercontent.com/krinya/repeatradar/refs/heads/main/img/example_user_heatmap_1.png)
 
 For detailed examples and advanced usage, see our Jupyter notebooks:
 - **[📊 Cohort Calculation Examples](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb)** - Complete guide to generating different types of cohort data
