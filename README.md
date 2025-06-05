@@ -2,9 +2,9 @@
 
 [![PyPI version](https://badge.fury.io/py/repeatradar.svg)](https://badge.fury.io/py/repeatradar) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/) [![Tests](https://github.com/krinya/repeatradar/actions/workflows/publish_to_pypi.yml/badge.svg)](https://github.com/krinya/repeatradar/actions/workflows/publish_to_pypi.yml)
 
-A comprehensive Python package for calculating and visualizing cohort retention and other cohort-based metrics. RepeatRadar helps you understand user behavior and trends over time by grouping users into cohorts based on their acquisition period and tracking their activity or value in subsequent periods.
+A streamlined Python package for calculating and visualizing cohort retention and other cohort-based metrics. RepeatRadar helps you understand user behavior and trends over time by grouping users into cohorts based on their acquisition period and tracking their activity or value in subsequent periods.
 
-## 🔗 Useful Links
+## 🔗 Links
 
 - **GitHub Repository**: https://github.com/krinya/repeatradar
 - **PyPI Package**: https://pypi.org/project/repeatradar/
@@ -16,11 +16,10 @@ A comprehensive Python package for calculating and visualizing cohort retention 
 
 ## ✨ Features
 
-- **Cohort Data Generation**: Calculate user retention, revenue cohorts, and custom metrics
-- **Rich Visualizations**: Interactive heatmaps, retention curves, and comprehensive dashboards
-- **Flexible Analysis**: Support for different time periods, aggregation functions, and cohort types
-- **Easy Integration**: Simple API that works seamlessly with pandas DataFrames
-- **Plotly-Powered**: Beautiful, interactive visualizations using Plotly
+- **📊 Cohort Data Generation**: Calculate user retention, revenue cohorts, and custom metrics
+- **🔥 Interactive Heatmaps**: Visualize cohort performance patterns with customizable styling
+- **📈 Retention Curves**: Track customer journey and retention trends over time
+- **📁 Export Options**: Save charts as HTML, PNG, or PDF for reports and presentations
 
 ## 🚀 Installation
 
@@ -30,11 +29,11 @@ pip install repeatradar
 
 ## 📊 Quick Start
 
-### Basic Cohort Analysis
+### Basic Cohort Generation
+This is how you can quickly calculate the user cohort data from your dataset:
 
 ```python
 from repeatradar import generate_cohort_data
-import pandas as pd
 
 # Load your data (example dataset available in examples/data/)
 ecommerce_data = pd.read_pickle("https://github.com/krinya/repeatradar/raw/refs/heads/main/examples/data/ecommerce_data_1.pkl")
@@ -44,8 +43,8 @@ basic_cohorts = generate_cohort_data(
     data=ecommerce_data,
     date_column='InvoiceDateTime',
     user_column='CustomerID',
-    cohort_period='M',       # Monthly cohorts (users grouped by acquisition month)
-    period_duration=30       # Track in 30-day periods
+    cohort_period='M', # Set cohort_period to monthly grouping
+    period_duration=30 # Set period duration (this is the granularity of retention tracking = the subsequent columns in the output)
 )
 
 basic_cohorts
@@ -60,7 +59,7 @@ from repeatradar import plot_cohort_heatmap
 
 # Create an interactive heatmap
 heatmap_fig = plot_cohort_heatmap(
-    cohort_data=basic_cohorts,
+    cohort_data=basic_cohorts, # The cohort data generated above
     title="📊 User Retention",
     color_scale="viridis",
     show_values=True,
@@ -73,46 +72,21 @@ heatmap_fig.show()
 
 ![heatmap of user cohort table](https://raw.githubusercontent.com/krinya/repeatradar/refs/heads/main/img/example_user_heatmap_1.png)
 
-For detailed examples and advanced usage, see our Jupyter notebooks:
-- **[📊 Cohort Calculation Examples](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb)** - Complete guide to generating different types of cohort data
-- **[🎨 Visualization Examples](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb)** - Interactive visualizations and dashboard creation
+For detailed examples and advanced usage, see the examples Jupyter notebooks:
+- **[📊 Cohort Calculation Examples](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb)** - Guide to generating different types of cohort data
+- **[🎨 Visualization Examples](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb)** - Interactive visualizations creation
 
-## 🎨 Available Visualizations
+## 🎨 Core Visualization Functions
 
-RepeatRadar offers several types of visualizations:
+RepeatRadar provides two essential visualization functions for cohort analysis:
 
-- **`plot_cohort_heatmap`**: Interactive heatmaps showing cohort performance over time
-- **`plot_retention_curves`**: Line charts comparing retention rates across cohorts
-- **`plot_cohort_comparison`**: Side-by-side comparison of multiple metrics
-- **`plot_period_comparison`**: Compare specific periods across all cohorts
-- **`plot_cohort_summary_stats`**: Statistical summaries of cohort performance
-- **`create_cohort_dashboard`**: Comprehensive dashboard with multiple visualizations
+- **`plot_cohort_heatmap()`**: Interactive heatmaps showing cohort performance patterns over time
+- **`plot_retention_curves()`**: Line charts comparing retention rates and trends across cohorts
 
-> 💡 **Tip:** Explore the [visualization examples notebook](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb) for detailed usage of all visualization functions.
+These core functions provide comprehensive insights into customer behavior and other cohort-based metrics, allowing you to visualize and analyze user retention, revenue trends, and more.
 
-
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to contribute, please follow these steps:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature-name`)
-3. Make your changes and commit them (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature-name`)
-5. Open a Pull Request
-
-Please make sure to update tests as appropriate and follow the coding standards outlined in the project.
+> 💡 **Tip:** For detailed examples and advanced usage, see the [📊 Cohort Calculation Examples](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb) and [🎨 Visualization Examples](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb) notebooks.
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with [Pandas](https://pandas.pydata.org/) for data manipulation
-- Powered by [Plotly](https://plotly.com/) for interactive visualizations
-- Package management with [Poetry](https://python-poetry.org/)
-
----
-
-**RepeatRadar** - Making cohort analysis simple and beautiful! 📡✨

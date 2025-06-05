@@ -10,11 +10,7 @@ from datetime import datetime, timedelta
 
 from repeatradar.visualization_generator import (
     plot_cohort_heatmap,
-    plot_retention_curves,
-    plot_cohort_comparison,
-    plot_period_comparison,
-    plot_cohort_summary_stats,
-    create_cohort_dashboard
+    plot_retention_curves
 )
 from repeatradar.cohort_generator import generate_cohort_data
 
@@ -197,196 +193,6 @@ class TestRetentionCurves:
         assert fig.layout.title.text == custom_title
 
 
-class TestCohortComparison:
-    """Test cases for plot_cohort_comparison function."""
-    
-    def test_basic_comparison(self, sample_cohort_data, sample_revenue_data):
-        """Test basic cohort comparison."""
-        cohort_dict = {
-            'users': sample_cohort_data,
-            'revenue': sample_revenue_data
-        }
-        
-        fig = plot_cohort_comparison(cohort_dict)
-        
-        assert isinstance(fig, go.Figure)
-        assert len(fig.data) == 2  # One heatmap per metric
-    
-    def test_comparison_with_custom_names(self, sample_cohort_data, sample_revenue_data):
-        """Test comparison with custom metric names."""
-        cohort_dict = {
-            'users': sample_cohort_data,
-            'revenue': sample_revenue_data
-        }
-        metric_names = {
-            'users': 'User Count',
-            'revenue': 'Revenue ($)'
-        }
-        
-        fig = plot_cohort_comparison(cohort_dict, metric_names=metric_names)
-        
-        assert isinstance(fig, go.Figure)
-    
-    def test_single_metric_comparison(self, sample_cohort_data):
-        """Test comparison with single metric."""
-        cohort_dict = {'users': sample_cohort_data}
-        
-        fig = plot_cohort_comparison(cohort_dict)
-        
-        assert isinstance(fig, go.Figure)
-        assert len(fig.data) == 1
-    
-    def test_comparison_without_colorscale(self, sample_cohort_data, sample_revenue_data):
-        """Test comparison without showing colorscale."""
-        cohort_dict = {
-            'users': sample_cohort_data,
-            'revenue': sample_revenue_data
-        }
-        
-        fig = plot_cohort_comparison(cohort_dict, show_colorscale=False)
-        
-        assert isinstance(fig, go.Figure)
-        # Check that colorscale is hidden for both heatmaps
-        assert fig.data[0].showscale == False
-        assert fig.data[1].showscale == False
-    
-    def test_comparison_reversed_y_axis(self, sample_cohort_data, sample_revenue_data):
-        """Test comparison with reversed y-axis."""
-        cohort_dict = {
-            'users': sample_cohort_data,
-            'revenue': sample_revenue_data
-        }
-        
-        fig = plot_cohort_comparison(cohort_dict, reverse_y_axis=True)
-        
-        assert isinstance(fig, go.Figure)
-        # Check that y-axis autorange is set to 'reversed' for all subplots
-        # Since we have 2 metrics, they should be in a 1x2 layout
-        for i in range(1, 3):  # subplot positions 1 and 2
-            row = (i-1) // 2 + 1
-            col = (i-1) % 2 + 1
-            yaxis_name = f'yaxis{i}' if i > 1 else 'yaxis'
-            if hasattr(fig.layout, yaxis_name):
-                yaxis = getattr(fig.layout, yaxis_name)
-                assert yaxis.autorange == 'reversed'
-
-
-class TestPeriodComparison:
-    """Test cases for plot_period_comparison function."""
-    
-    def test_basic_period_comparison_bar(self, sample_cohort_data):
-        """Test basic period comparison with bar chart."""
-        fig = plot_period_comparison(sample_cohort_data)
-        
-        assert isinstance(fig, go.Figure)
-        assert fig.data[0].type == 'bar'
-    
-    def test_period_comparison_line(self, sample_cohort_data):
-        """Test period comparison with line chart."""
-        fig = plot_period_comparison(sample_cohort_data, chart_type="line")
-        
-        assert isinstance(fig, go.Figure)
-        assert all(trace.type == 'scatter' for trace in fig.data)
-    
-    def test_period_comparison_custom_periods(self, sample_cohort_data):
-        """Test period comparison with custom periods."""
-        periods = [0, 2, 4]
-        fig = plot_period_comparison(sample_cohort_data, periods_to_compare=periods)
-        
-        assert isinstance(fig, go.Figure)
-    
-    def test_period_comparison_invalid_periods(self, sample_cohort_data):
-        """Test period comparison with invalid periods."""
-        periods = [10, 20, 30]  # These periods don't exist in the data
-        
-        with pytest.raises(ValueError, match="None of the specified periods are available"):
-            plot_period_comparison(sample_cohort_data, periods_to_compare=periods)
-
-
-class TestCohortSummaryStats:
-    """Test cases for plot_cohort_summary_stats function."""
-    
-    def test_basic_summary_stats(self, sample_cohort_data):
-        """Test basic summary statistics visualization."""
-        fig = plot_cohort_summary_stats(sample_cohort_data)
-        
-        assert isinstance(fig, go.Figure)
-        assert len(fig.data) >= 5  # Mean, Median, Min, Max, Std
-    
-    def test_summary_stats_custom_title(self, sample_cohort_data):
-        """Test summary stats with custom title."""
-        custom_title = "Custom Summary Statistics"
-        fig = plot_cohort_summary_stats(sample_cohort_data, title=custom_title)
-        
-        assert fig.layout.title.text == custom_title
-
-
-class TestCohortDashboard:
-    """Test cases for create_cohort_dashboard function."""
-    
-    def test_dashboard_single_metric(self, sample_cohort_data):
-        """Test dashboard with only user data."""
-        fig = create_cohort_dashboard(sample_cohort_data)
-        
-        assert isinstance(fig, go.Figure)
-        assert len(fig.data) >= 1
-    
-    def test_dashboard_with_retention(self, sample_cohort_data, sample_retention_data):
-        """Test dashboard with user and retention data."""
-        fig = create_cohort_dashboard(sample_cohort_data, retention_data=sample_retention_data)
-        
-        assert isinstance(fig, go.Figure)
-        assert len(fig.data) >= 2
-    
-    def test_dashboard_all_metrics(self, sample_cohort_data, sample_retention_data, sample_revenue_data):
-        """Test dashboard with all three metrics."""
-        fig = create_cohort_dashboard(
-            sample_cohort_data, 
-            retention_data=sample_retention_data,
-            revenue_data=sample_revenue_data
-        )
-        
-        assert isinstance(fig, go.Figure)
-        assert len(fig.data) >= 3
-    
-    def test_dashboard_custom_title(self, sample_cohort_data):
-        """Test dashboard with custom title."""
-        custom_title = "Custom Dashboard"
-        fig = create_cohort_dashboard(sample_cohort_data, title=custom_title)
-        
-        assert fig.layout.title.text == custom_title
-    
-    def test_dashboard_reversed_y_axis(self, sample_cohort_data, sample_retention_data, sample_revenue_data):
-        """Test dashboard with reversed y-axis."""
-        fig = create_cohort_dashboard(
-            sample_cohort_data, 
-            retention_data=sample_retention_data,
-            revenue_data=sample_revenue_data,
-            reverse_y_axis=True
-        )
-        
-        assert isinstance(fig, go.Figure)
-        # With 3 metrics, the layout should be 2x2, so we have 3 subplots with data
-        # Check that y-axis autorange is set to 'reversed' for all subplots
-        for i in range(1, 4):  # We have 3 subplots with data
-            yaxis_name = f'yaxis{i}' if i > 1 else 'yaxis'
-            if hasattr(fig.layout, yaxis_name):
-                yaxis = getattr(fig.layout, yaxis_name)
-                assert yaxis.autorange == 'reversed'
-    
-    def test_dashboard_without_colorscale(self, sample_cohort_data, sample_retention_data):
-        """Test dashboard without showing colorscale."""
-        fig = create_cohort_dashboard(
-            sample_cohort_data, 
-            retention_data=sample_retention_data,
-            show_colorscale=False
-        )
-        
-        assert isinstance(fig, go.Figure)
-        # Check that colorscale is hidden for heatmaps
-        assert fig.data[0].showscale == False
-        assert fig.data[1].showscale == False
-
 
 class TestEndToEndVisualization:
     """End-to-end tests using generated cohort data."""
@@ -405,12 +211,6 @@ class TestEndToEndVisualization:
         # Test that visualization functions work with generated data
         fig1 = plot_cohort_heatmap(cohort_data)
         assert isinstance(fig1, go.Figure)
-        
-        fig2 = plot_period_comparison(cohort_data)
-        assert isinstance(fig2, go.Figure)
-        
-        fig3 = plot_cohort_summary_stats(cohort_data)
-        assert isinstance(fig3, go.Figure)
     
     def test_end_to_end_retention_analysis(self, sample_transaction_data):
         """Test end-to-end retention analysis."""
@@ -445,59 +245,6 @@ class TestEndToEndVisualization:
         fig = plot_cohort_heatmap(revenue_data, title="Revenue Cohorts")
         assert isinstance(fig, go.Figure)
     
-    def test_end_to_end_dashboard(self, sample_transaction_data):
-        """Test complete dashboard with all metrics."""
-        # Generate all types of cohort data
-        user_data = generate_cohort_data(
-            data=sample_transaction_data,
-            date_column='transaction_date',
-            user_column='user_id',
-            cohort_period='M',
-            period_duration=30
-        )
-        
-        retention_data = generate_cohort_data(
-            data=sample_transaction_data,
-            date_column='transaction_date',
-            user_column='user_id',
-            cohort_period='M',
-            period_duration=30,
-            calculate_retention_rate=True
-        )
-        
-        revenue_data = generate_cohort_data(
-            data=sample_transaction_data,
-            date_column='transaction_date',
-            user_column='user_id',
-            value_column='revenue',
-            aggregation_function='sum',
-            cohort_period='M',
-            period_duration=30
-        )
-        
-        # Create comprehensive dashboard
-        fig = create_cohort_dashboard(
-            user_data,
-            retention_data=retention_data,
-            revenue_data=revenue_data,
-            title="Complete Cohort Analysis"
-        )
-        
-        assert isinstance(fig, go.Figure)
-        assert len(fig.data) >= 3
-    
-    def test_dashboard_without_colorscale(self, sample_cohort_data, sample_retention_data):
-        """Test dashboard without showing colorscales."""
-        fig = create_cohort_dashboard(
-            cohort_data=sample_cohort_data,
-            retention_data=sample_retention_data,
-            show_colorscale=False
-        )
-        
-        assert isinstance(fig, go.Figure)
-        # Check that colorscales are hidden
-        assert fig.data[0].showscale == False
-        assert fig.data[1].showscale == False
 
 
 class TestVisualizationErrorHandling:
