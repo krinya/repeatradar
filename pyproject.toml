@@ -3,9 +3,9 @@ name = "repeatradar"
 
 version = "0.6.0"
 
-description = "A package for creating cohort retention calculation and visualizations"
+description = "A Python package for analyzing cohort retention and generating insightful visualizations."
 authors = [
-    {name = "Kristof Menyhert",email = "menyhert.kristof@gmail.com"}
+    {name = "Kristof Menyhert", email = "menyhert.kristof@gmail.com"}
 ]
 readme = "README.md"
 license = "MIT"
