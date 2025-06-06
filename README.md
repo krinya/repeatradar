@@ -6,13 +6,13 @@ A lightweight Python package for calculating and visualizing cohort retention an
 
 ## 🔗 Links
 
-**GitHub**: https://github.com/krinya/repeatradar
-**PyPI**: https://pypi.org/project/repeatradar/
-**Documentation**: https://krinya.github.io/repeatradar/
-**Example notebooks**:
-* [Cohort Calculation Demo](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb)
-* [Cohort Visualization Demo](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb)
-* [Example Data](https://github.com/krinya/repeatradar/tree/main/examples/data)
+* **GitHub**: https://github.com/krinya/repeatradar
+* **PyPI**: https://pypi.org/project/repeatradar/
+* **Documentation**: https://krinya.github.io/repeatradar/
+* **Example notebooks**:
+    * [Cohort Calculation Demo](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb)
+    * [Cohort Visualization Demo](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb)
+    * [Example Data](https://github.com/krinya/repeatradar/tree/main/examples/data)
 
 ## 🌟 Features
 
