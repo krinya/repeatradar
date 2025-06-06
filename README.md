@@ -1,25 +1,25 @@
-# RepeatRadar 📡
-
 [![PyPI version](https://badge.fury.io/py/repeatradar.svg)](https://badge.fury.io/py/repeatradar) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/) [![Tests](https://github.com/krinya/repeatradar/actions/workflows/publish_to_pypi.yml/badge.svg)](https://github.com/krinya/repeatradar/actions/workflows/publish_to_pypi.yml) ![PyPI - Downloads](https://img.shields.io/pypi/dm/repeatradar)
+
+# RepeatRadar 📡
 
 A lightweight Python package for calculating and visualizing cohort retention and other cohort-based metrics. With just a few simple commands, you can analyze user behavior and trends over time by grouping users into cohorts based on their acquisition period and tracking their activity or value in subsequent periods.
 
+## 📖 Overview
+
+**Cohort Analysis Made Easy**: Quickly calculate user retention, revenue trends, and other cohort-based metrics. 
+**Insightful Visualizations**: Create heatmaps and retention curves to uncover patterns in your data. 
+**Highly Customizable**: Flexible options for cohort periods, tracking granularity, and visualization styles. 
+**Seamless Pandas & Plotly Integration**: Works effortlessly with popular Python libraries for a smooth analysis experience.
+
 ## 🔗 Links
 
-* **GitHub**: https://github.com/krinya/repeatradar
-* **PyPI**: https://pypi.org/project/repeatradar/
-* **Documentation**: https://krinya.github.io/repeatradar/
-* **Example notebooks**:
-    * [Cohort Calculation Demo](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb)
-    * [Cohort Visualization Demo](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb)
-    * [Example Data](https://github.com/krinya/repeatradar/tree/main/examples/data)
-
-## 🌟 Features
-
-**Cohort Analysis Made Easy**: Quickly calculate user retention, revenue trends, and other cohort-based metrics.
-**Insightful Visualizations**: Create heatmaps and retention curves to uncover patterns in your data.
-**Highly Customizable**: Flexible options for cohort periods, tracking granularity, and visualization styles.
-**Seamless Pandas & Plotly Integration**: Works effortlessly with popular Python libraries for a smooth analysis experience.
+**GitHub**: https://github.com/krinya/repeatradar 
+**PyPI**: https://pypi.org/project/repeatradar/ 
+**Documentation**: https://krinya.github.io/repeatradar/ 
+**Example notebooks**:
+*  [Cohort Calculation Demo](https://github.com/krinya/repeatradar/blob/main/examples/01_cohort_calculation_demo.ipynb) 
+* [Cohort Visualization Demo](https://github.com/krinya/repeatradar/blob/main/examples/02_cohort_visualization_demo.ipynb) 
+* [Example Data](https://github.com/krinya/repeatradar/tree/main/examples/data)
 
 ## 🚀 Installation
 To install RepeatRadar, simply use pip:
