@@ -2,7 +2,7 @@
 
 # RepeatRadar 📡
 
-A lightweight Python package for calculating and visualizing cohort retention and other cohort-based metrics. With just a few simple commands, you can analyze user behavior and trends over time by grouping users into cohorts based on their acquisition period and tracking their activity or value in subsequent periods.
+A lightweight Python package for calculating and visualizing cohort retention and other cohort-based metrics. With just a few simple commands, you can analyze user behavior and trends over time by grouping users into cohorts based on their acquisition period and tracking their activity or other values (e.g., revenue, transaction count) in subsequent periods.
 
 ## 📖 Overview
 
