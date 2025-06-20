@@ -1,7 +1,7 @@
 # repeatradar package initialization
 # Make the version easily accessible (matches pyproject.toml)
 
-__version__ = "0.6.1"
+__version__ = "1.0.0"
 
 # Import core functionality
 from .cohort_generator import generate_cohort_data

@@ -1,7 +1,7 @@
 [project]
 name = "repeatradar"
 
-version = "0.6.1"
+version = "1.0.0"
 
 description = "A Python package for analyzing cohort retention and generating insightful visualizations."
 authors = [
@@ -35,7 +35,7 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.bumpversion]
-current_version = "0.6.1"
+current_version = "1.0.0"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"

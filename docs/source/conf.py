@@ -9,7 +9,7 @@
 project = 'repeatradar'
 copyright = '2025, Kristof Menyhert, Tamas Szabo'
 author = 'Kristof Menyhert, Tamas Szabo'
-release = '0.6.1'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
