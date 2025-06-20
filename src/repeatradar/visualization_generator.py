@@ -11,6 +11,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
+from plotly.colors import sequential, diverging, cyclical, qualitative
 
 
 def plot_cohort_heatmap(
@@ -63,23 +64,19 @@ def plot_cohort_heatmap(
     if cohort_data.empty:
         raise ValueError("Input DataFrame is empty")
     
-    # Validate color scale (let plotly handle the actual validation)
+    # Validate color scale using Plotly's built-in color scales
+
+    # Gather all available color scale names from plotly
+    valid_color_scales = (
+        list(sequential.__dict__.keys())
+        + list(diverging.__dict__.keys())
+        + list(cyclical.__dict__.keys())
+        + list(qualitative.__dict__.keys())
+    )
+    # Filter out private and non-list attributes
     valid_color_scales = [
-        'aggrnyl', 'agsunset', 'algae', 'amp', 'armyrose', 'balance',
-        'blackbody', 'bluered', 'blues', 'blugrn', 'bluyl', 'brbg',
-        'brwnyl', 'bugn', 'bupu', 'burg', 'burgyl', 'cividis', 'curl',
-        'darkmint', 'deep', 'delta', 'dense', 'earth', 'edge', 'electric',
-        'emrld', 'fall', 'geyser', 'gnbu', 'gray', 'greens', 'greys',
-        'haline', 'hot', 'hsv', 'ice', 'icefire', 'inferno', 'jet',
-        'magenta', 'magma', 'matter', 'mint', 'mrybm', 'mygbm', 'oranges',
-        'orrd', 'oryel', 'oxy', 'peach', 'phase', 'picnic', 'pinkyl',
-        'piyg', 'plasma', 'plotly3', 'portland', 'prgn', 'pubu', 'pubugn',
-        'puor', 'purd', 'purp', 'purples', 'purpor', 'rainbow', 'rdbu',
-        'rdgy', 'rdpu', 'rdylbu', 'rdylgn', 'redor', 'reds', 'solar',
-        'spectral', 'speed', 'sunset', 'sunsetdark', 'teal', 'tealgrn',
-        'tealrose', 'tempo', 'temps', 'thermal', 'tropic', 'turbid',
-        'turbo', 'twilight', 'viridis', 'ylgn', 'ylgnbu', 'ylorbr',
-        'ylorrd'
+        cs for cs in valid_color_scales
+        if not cs.startswith("_") and isinstance(getattr(sequential, cs, None) or getattr(diverging, cs, None) or getattr(cyclical, cs, None) or getattr(qualitative, cs, None), list)
     ]
     # Also allow reversed versions
     valid_color_scales_with_reverse = valid_color_scales + [cs + '_r' for cs in valid_color_scales]
