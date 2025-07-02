@@ -9,8 +9,6 @@ authors = [
 ]
 readme = "README.md"
 license = "MIT"
-homepage = "https://github.com/krinya/repeatradar"
-repository = "https://github.com/krinya/repeatradar"
 
 keywords = ["cohort", "retention", "calculation", "visualization"]
 
@@ -22,6 +20,26 @@ dependencies = [
     "datetime (>=5.5,<6.0)",
     "plotly (>=6.1.2,<7.0.0)"
 ]
+
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Data Scientists",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Cohort Analysis",
+    "Operating System :: OS Independent"
+]
+
+[project.urls]
+homepage = "https://github.com/krinya/repeatradar"
+repository = "https://github.com/krinya/repeatradar"
+documentation = "https://krinya.github.io/repeatradar/"
 
 [tool.poetry]
 packages = [{include = "repeatradar", from = "src"}]
